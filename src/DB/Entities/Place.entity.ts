@@ -2,6 +2,8 @@ import {Table, Column, Model, PrimaryKey, ForeignKey} from 'sequelize-typescript
 import {ActiveStatus} from "./Enums/ActiveStatus";
 import {Radar} from "./Radar.enity";
 import {Camera} from "./Camera.entity";
+import {Cordinator} from "./cordinator";
+
 
 
 @Table
@@ -20,7 +22,9 @@ export class Place extends Model<Place> {
     @Column
     @ForeignKey(() => Camera)
     cameraId: string;
+
+    @Column
+    position: Cordinator;
 }
 
-// - description, title, position(lat,lang) - has radars and cameras
 
