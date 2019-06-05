@@ -1,7 +1,7 @@
 
 import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
-import { ActiveStatus }from './Enums/ActiveStatus'
-import { Radar }from './Radar.enity'
+import { ActiveStatus }from '../../Models/Enums/ActiveStatus'
+import { Radar }from './Radar.entity'
 
 @Table
 export class Target extends Model<Target> {

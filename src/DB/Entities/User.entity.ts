@@ -1,19 +1,29 @@
-import { Table, Column, Model, Unique } from 'sequelize-typescript';
-import { Roles }from './Enums/Roles'
+import {Table, Column, Model, Unique, HasMany, BelongsToMany, PrimaryKey} from 'sequelize-typescript';
+import { Roles }from '../../Models/Enums/Roles'
+import {Permission} from "./Permission.entity";
+import {UsersPermissions} from "./UsersPermissions.entity";
+
 @Table
-export class Radar extends Model<Radar> {
+export class User extends Model<User> {
+    @PrimaryKey
+    @Column
+    id: number;
+
     @Column
     name: string;
 
     @Column
     password: string;
 
-    @Column
     @Unique
+    @Column
     email: string;
 
     @Column
     role: Roles;
+
+    @BelongsToMany(() => Permission, () => UsersPermissions)
+    permissions: Permission[];
 }
 
 

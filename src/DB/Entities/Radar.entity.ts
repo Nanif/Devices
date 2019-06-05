@@ -1,11 +1,10 @@
-import {Table, Column, Model, PrimaryKey, ForeignKey, BelongsTo} from 'sequelize-typescript';
+import { Table, Column, Model, PrimaryKey, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import {ActiveStatus} from "../../Models/Enums/ActiveStatus";
-import {Place} from "./Place.entity";
-import {Area} from "./Area.entity";
-
+import {Area} from "./Area.entity"
+import {Place} from "./Place.entity"
 
 @Table
-export class Camera extends Model<Camera> {
+export class Radar extends Model<Radar> {
 
     @Column
     title: string;
@@ -22,14 +21,14 @@ export class Camera extends Model<Camera> {
     @Column
     status: ActiveStatus;
 
-    @Column
-    @ForeignKey(() => Place)
-    placeId: string;
-
     @ForeignKey(() => Area)
     @Column
     areaId: number;
 
     @BelongsTo(() => Area)
     area: Area;
+
+    @Column
+    @ForeignKey(() => Place)
+    placeId: string;
 }

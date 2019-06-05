@@ -1,9 +1,8 @@
 import {Table, Column, Model, PrimaryKey, ForeignKey} from 'sequelize-typescript';
-import {ActiveStatus} from "./Enums/ActiveStatus";
-import {Radar} from "./Radar.enity";
+import {Radar} from "./Radar.entity";
 import {Camera} from "./Camera.entity";
-import {Cordinator} from "./cordinator";
-
+import {Cordinator} from "../../Models/cordinator";
+import * as sequelize from "sequelize";
 
 
 @Table
@@ -23,8 +22,16 @@ export class Place extends Model<Place> {
     @ForeignKey(() => Camera)
     cameraId: string;
 
-    @Column
-    position: Cordinator;
+    @Column({
+        get: function () {
+            return JSON.parse(this.getDataValue('value'));
+        },
+        set: function (value: Cordinator[]) {
+            this.setDataValue('value', JSON.stringify(value));
+        }
+    })
+    geoJson: string;
+
 }
 
 

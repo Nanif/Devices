@@ -1,7 +1,7 @@
-import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
-import { Radar } from "./Radar.enity";
-import { Camera } from "./Camera.entity";
-import {Cordinator} from "./cordinator";
+import {Table, Column, Model, ForeignKey, HasMany} from 'sequelize-typescript';
+import {Radar} from "./Radar.entity";
+import {Camera} from "./Camera.entity";
+import {Cordinator} from "../../Models/cordinator";
 
 
 @Table
@@ -13,16 +13,21 @@ export class Area extends Model<Area> {
     @Column
     description: string;
 
-    @Column
-    @ForeignKey(() => Radar)
-    radarId: string;
+    @Column({
+        get: function () {
+            return JSON.parse(this.getDataValue('value'));
+        },
+        set: function (value: Cordinator) {
+            this.setDataValue('value', JSON.stringify(value));
+        }
+    })
+    geoJson: string;
 
-    @Column
-    @ForeignKey(() => Camera)
-    cameraId: string;
+    @HasMany(() => Camera)
+    cameras: Camera[];
 
-    @Column
-    geoJson: Cordinator[];
+    @HasMany(() => Radar)
+    radars: Radar[];
 
 }
 
