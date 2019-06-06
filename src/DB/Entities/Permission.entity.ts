@@ -8,10 +8,6 @@ export class Permission extends Model<Permission> {
     @Column
     type: string;
 
-    @PrimaryKey
-    @Column
-    id: number;
-
     @BelongsToMany(() => User, () => UsersPermissions)
     users: User[];
 }

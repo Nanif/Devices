@@ -8,6 +8,8 @@ import {CameraProviders} from "./EntityProviders/Camera.provider";
 import {PlaceProviders} from "./EntityProviders/Place.provider";
 import {PermissionProvider} from './EntityProviders/Permission.provider'
 import {UsersPermissionProvider} from "./EntityProviders/UsersPermissions.provider";
+import {UserDao} from "../Dao/User.dao";
+import {AreaDao} from "../Dao/Area.dao";
 
 
 const providers = [
@@ -22,9 +24,13 @@ const providers = [
     ...UsersPermissionProvider
 ];
 
+const daos = [
+    UserDao,
+    AreaDao
+];
 
 @Module({
-    providers: providers,
-    exports: providers,
+    providers: [...providers,...daos],
+    exports: [...providers,...daos],
 })
 export class DatabaseModule {}

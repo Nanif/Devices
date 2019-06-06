@@ -4,9 +4,6 @@ import { User } from './User.entity'
 
 @Table
 export class UsersPermissions extends Model<UsersPermissions> {
-    @PrimaryKey
-    @Column
-    id: number;
 
     @ForeignKey(() => User)
     @Column
@@ -15,6 +12,5 @@ export class UsersPermissions extends Model<UsersPermissions> {
     @ForeignKey(() => Permission)
     @Column
     permissionId: number;
-
 
 }

@@ -2,9 +2,8 @@ import {Body, Controller, Get, HttpStatus, Post, Res, UsePipes, ValidationPipe} 
 import {AreaService} from "../Services/Area.service";
 import {AreaModel} from "../Models/Area.model";
 import {Response} from "express";
-import {CreateAreaDto} from "../Dto/create-area.dto";
-import {Area} from "../DB/Entities/Area.entity";
-import {CameraModel} from "../Models/Camera.model";
+import {CreateAreaRequestDto} from "../Dto/create-area-request.dto";
+import {CreateAreaResponseDto} from "../Dto/create-area-response.dto";
 
 @Controller('area')
 export class AreaController {
@@ -13,47 +12,25 @@ export class AreaController {
 
     @Get('getAllAreas')
     async getAllAreas(@Res() res: Response) {
-
+        console.log('get areas')
         let areas: AreaModel[] = await this.areaService.getAllAreas();
         return res.status(HttpStatus.OK).send({areas: areas})
     }
 
     @Post('createArea')
-    async createArea(@Res() res: Response, @Body() areaDto: CreateAreaDto) {
+    async createArea(@Body() areaDto: CreateAreaRequestDto, @Res() res: Response) {
         try {
-            const cameras: CameraModel[]  = new Array(areaDto.cameras.length)  ;
-            for (let i = 0; i < areaDto.cameras.length; i++) {
-                let camera = new CameraModel(
-                    areaDto.cameras[i].title,
-                    areaDto.cameras[i].description,
-                    areaDto.cameras[i].ip,
-                    areaDto.cameras[i].port,
-                    areaDto.cameras[i].status,
-                    areaDto.cameras[i].placeId,
-                    areaDto.cameras[i].areaId
-                );
-                cameras[i] = camera
-            }
-            const areaModel: AreaModel = {
-                title: areaDto.title,
-                description: areaDto.description,
-                cameras: areaDto.cameras,
-                radars: areaDto.radars,
-                geoJson: areaDto.geoJson,
-            };
-
-            const area: Area = await this.areaService.createArea(areaModel);
-            const areaModelResponse = AreaModel.transformFromEntityToModel(area);
-            console.log(areaModelResponse);
-
-            return res.status(HttpStatus.OK).send({area: areaModelResponse})
-        } catch (e) {
-            console.log(e);
+            const areaModel: AreaModel = await this.areaService.createArea(areaDto);
+            const createAreaResponse: CreateAreaResponseDto = {
+                id: areaModel.id,
+                title: areaModel.title,
+                description: areaModel.description;
         }
+            return res.status(HttpStatus.CREATED).send({area: createAreaResponse})
+
+        } catch (e) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: 'something wrong'})
+        }
+        console.log('areaDto', areaDto);
     }
-
-    // @Get()
-    // getAreaById(): Response {}
-
-    //get update delete create
 }

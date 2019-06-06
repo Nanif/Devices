@@ -1,7 +1,7 @@
 import {CameraModel} from "../Models/Camera.model";
 import {RadarModel} from "../Models/Radar.model";
 
-export  class CreateAreaDto {
+export  class CreateAreaRequestDto {
     title: string;
 
     description: string;
