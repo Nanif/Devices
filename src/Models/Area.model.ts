@@ -4,7 +4,6 @@ import {Area} from "../DB/Entities/Area.entity";
 
 
 export  class AreaModel {
-    id:number;
     title: string;
     description: string;
     geoJson?: string;
@@ -16,7 +15,6 @@ export  class AreaModel {
         const areaJson = area.toJSON();
         console.log('areaJson',areaJson);
         const areaModel:AreaModel = {
-            id:areaJson.id,
             title:areaJson.title,
             description:areaJson.title,
             geoJson:areaJson.geoJson || '',

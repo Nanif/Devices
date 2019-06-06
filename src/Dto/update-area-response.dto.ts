@@ -1,15 +1,9 @@
 import {CameraModel} from "../Models/Camera.model";
 import {RadarModel} from "../Models/Radar.model";
 
-export  class CreateAreaRequestDto {
-
+export  class UpdateAreaResponseDto {
     title: string;
 
     description: string;
 
-    cameras:CameraModel[];
-
-    radars: RadarModel[];
-
-    geoJson: string;
 }
