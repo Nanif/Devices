@@ -4,6 +4,7 @@ import {Area} from "../DB/Entities/Area.entity";
 
 
 export  class AreaModel {
+    id?: number;
     title: string;
     description: string;
     geoJson?: string;
@@ -12,7 +13,8 @@ export  class AreaModel {
     constructor() {}
 
     static transformFromEntityToModel(area:Area){
-        const areaJson = area.toJSON();
+        console.log('##########################################',area);
+        const areaJson = area.dataValues;
         console.log('areaJson',areaJson);
         const areaModel:AreaModel = {
             title:areaJson.title,

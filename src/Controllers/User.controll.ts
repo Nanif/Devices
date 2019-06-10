@@ -5,56 +5,35 @@ import {Response} from "express";
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) {
+    }
+
     @Get('login')
-    login(@Query() request, @Res() res: Response): Response {
+    login(@Query() request, @Res() res: Response): any {
+        this.userService.login(request).then((result) => {
+            return res.status(HttpStatus.OK).send({user: 'user'})
 
-        try {
-            this.userService.login(request).then((result) => {
-
-                return res.status(HttpStatus.OK).send({user: 'user'})
-
-            }).catch(error => {
-
-                return res.status(HttpStatus.BAD_REQUEST).send(error)
-            })
-
-
-        } catch (e) {
-            return res.status(HttpStatus.BAD_REQUEST).send('failed')
-        }
+        }).catch(error => {
+            return res.status(HttpStatus.BAD_REQUEST).send(error)
+        })
     }
 
     @Post('register')
     register(@Body() registerUser: registerDto, @Res() res: Response): any {
-        try {
-            const user = this.userService.register(registerUser).then(() => {
-                if (!user) {
-                    return res.status(HttpStatus.BAD_REQUEST).send({error: 'Could not create user'})
-                }
-                return res.status(HttpStatus.CREATED).send({user: user})
+        this.userService.register(registerUser).then((user) => {
+            if (!user) {
+                return res.status(HttpStatus.BAD_REQUEST).send({error: 'Could not create user'})
+            }
+            return res.status(HttpStatus.CREATED).send({user: user})
+        }).catch(error => {
+            return res.status(HttpStatus.BAD_REQUEST).send({
+                message: 'could not register user. Try again',
+                error: error
             })
-        } catch (e) {
-            return res.status(HttpStatus.BAD_REQUEST).send({error: 'Something went wrong, please try again!'})
-        }
+        })
     }
 
-    @Post()
-    logout(@Body() registerUser: registerDto, @Res() res: Response): any {
-        //
-        // try {
-        //     const user = this.userService.register(registerUser).then(() => {
-        //         if (!user) {
-        //             return res.status(HttpStatus.BAD_REQUEST).send({error: 'Could not create user'})
-        //         }
-        //         return res.status(HttpStatus.CREATED).send({user: user})
-        //     })
-        // } catch (e) {
-        //     return res.status(HttpStatus.BAD_REQUEST).send({error: 'Something went wrong, please try again!'})
-        // }
-    }
-
-
+    // updateUser()
     @Post()
     getUserByToken(@Body() registerUser: registerDto, @Res() res: Response): any {
         //

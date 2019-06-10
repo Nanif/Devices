@@ -2,8 +2,9 @@ import {Inject, Injectable} from "@nestjs/common";
 import {User} from "src/DB/Entities/User.entity";
 import {registerDto} from "../Dto/register-dto";
 import {throwError} from "rxjs";
-
+import {UserModel} from "../Models/User.model";
 import * as bcrypt from 'bcrypt'
+import {Roles} from "../Models/Enums/Roles";
 
 // const bcrypt = require('bcryptjs');
 
@@ -14,22 +15,20 @@ export class UserDao {
     constructor(@Inject('Users_REPOSITORY') private readonly Users_REPOSITORY: typeof User) {
     }
 
-    async register(user: registerDto): Promise<User> {
-
+    async register(user: UserModel): Promise<User> {
+        console.log(user);
         let hashedPassword = '';
 
         await this.hashPassword(user.password).then((res) => {
             hashedPassword = res;
+        }).catch(error=> {
         })
-
 
         return new Promise<User>(async (resolve, reject) => {
             try {
-                let res = await this.Users_REPOSITORY.create({
-                    name: user.name,
-                    email: user.email,
-                    password: hashedPassword
-                });
+                user.role = Roles.regular;
+                let res = await this.Users_REPOSITORY.create(user);
+
                 if (res) {
                     console.log('res', res)
                     resolve(res)
@@ -57,10 +56,8 @@ export class UserDao {
         })
 
         if (usr) {
-            console.log('rtyuio')
             return await this.comparePassword(user.password, usr.password)
         } else {
-            console.log('error')
             throwError(new Error('this is an important exception'))
         }
     }

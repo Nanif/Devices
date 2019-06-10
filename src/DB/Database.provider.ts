@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize-typescript';
+ import { Sequelize } from 'sequelize-typescript';
 import {Radar} from './Entities/Radar.entity'
 import {Camera} from './Entities/Camera.entity'
 import {Area} from './Entities/Area.entity'
