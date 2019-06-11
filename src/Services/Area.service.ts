@@ -43,19 +43,16 @@ export class AreaService {
             cameras: updateAreaDto.cameras,
             radars: updateAreaDto.radars
         }
-
-        const areaEntity = await this.areaDao.updateArea(areaModel);
-        return AreaModel.transformFromEntityToModel(areaEntity);
+        return await this.areaDao.updateArea(areaModel);
     }
 
 
-    async deleteArea(deleteAreaDto: DeleteAreaRequestDto): Promise<AreaModel> {
+    async deleteArea(deleteAreaDto: DeleteAreaRequestDto): Promise<Number> {
         // which object to send to dao weather areaModel or DeleteAreaRequestDto ?
         const areaModel: AreaModel = {
             id: deleteAreaDto.id,
         }
-
         const areaEntity = await this.areaDao.deleteArea(areaModel);
-        return AreaModel.transformFromEntityToModel(areaEntity);
+        return areaEntity;
     }
 }

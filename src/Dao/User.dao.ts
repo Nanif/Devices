@@ -16,7 +16,6 @@ export class UserDao {
     }
 
     async register(user: UserModel): Promise<User> {
-        console.log(user);
         let hashedPassword = '';
 
         await this.hashPassword(user.password).then((res) => {
@@ -30,14 +29,11 @@ export class UserDao {
                 let res = await this.Users_REPOSITORY.create(user);
 
                 if (res) {
-                    console.log('res', res)
                     resolve(res)
                 } else {
-                    console.log('not res!!')
                     resolve(null)
                 }
             } catch (e) {
-                console.warn('message', e.message);
                 reject(e)
             }
         })

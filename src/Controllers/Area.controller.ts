@@ -6,22 +6,21 @@ import {CreateAreaRequestDto} from "../Dto/create-area-request.dto";
 import {CreateAreaResponseDto} from "../Dto/create-area-response.dto";
 import {UpdateAreaRequestDto} from "../Dto/update-area-request.dto";
 import {UpdateAreaResponseDto} from "../Dto/update-area-response.dto";
+import {DeleteAreaRequestDto} from "../Dto/Delete-area-request-dto";
 
 @Controller('area')
 export class AreaController {
-    constructor(private readonly areaService: AreaService) {
+    constructor(private readonly  areaService: AreaService) {
     }
 
     @Get('getAllAreas')
     async getAllAreas(@Res() res: Response) {
         this.areaService.getAllAreas().then(areas => {
             if (areas) {
-                console.log('ppppppppppp')
                 return res.status(HttpStatus.OK).send({areas: areas})
             }
             return res.status(HttpStatus.BAD_REQUEST).send({error:"Could not get areas"})
         }).catch(error => {
-            console.log('error')
             return res.status(HttpStatus.BAD_REQUEST).send({error: error})
         });
 
@@ -43,36 +42,26 @@ export class AreaController {
         }
     }
 
-
     // need to check wather it works!!
     @Put('updateArea')
     async updateArea(@Body() areaDto: UpdateAreaRequestDto, @Res() res: Response) {
         try {
             const updatedAreaModel: AreaModel = await this.areaService.updateArea(areaDto);
-
-            if (updatedAreaModel) {
-                return res.status(HttpStatus.OK).send({area: updatedAreaModel})
-            }
+            return res.status(HttpStatus.OK).send({area: updatedAreaModel})
         } catch (e) {
             res.status(HttpStatus.BAD_REQUEST).send({error: 'could not update area'})
         }
     }
 
-    // @Delete()
-    // async deleteArea(@Body() areaDto: UpdateAreaRequestDto, @Res() res: Response) {
-    //     try {
-    //
-    //         const areaModel: UpdateAreaRequestDto = await this.areaService.updateArea(areaDto);
-    //
-    //         const updatedeArea: UpdateAreaResponseDto = {
-    //             title: areaModel.title,
-    //             description: areaModel.description
-    //         }
-    //
-    //         return res.status(HttpStatus.OK).send({area: updatedeArea})
-    //
-    //     } catch (e) {
-    //         res.status(HttpStatus.BAD_REQUEST).send({error: 'could not update area'})
-    //     }
-    // }
+    @Delete('deleteArea')
+    async deleteArea(@Body() areaDto: DeleteAreaRequestDto, @Res() res: Response) {
+        try {
+            const deletedArea: Number = await this.areaService.deleteArea(areaDto);
+
+            return res.status(HttpStatus.OK).send({area: deletedArea})
+
+        } catch (e) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: 'could not update area'})
+        }
+    }
 }

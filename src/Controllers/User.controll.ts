@@ -3,19 +3,22 @@ import {UserService} from "../Services/User.service";
 import {registerDto} from "../Dto/register-dto";
 import {Response} from "express";
 
+
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {
     }
 
     @Get('login')
-    login(@Query() request, @Res() res: Response): any {
+    login(@Query() request, @Res() res: Response): Response {
+
         this.userService.login(request).then((result) => {
             return res.status(HttpStatus.OK).send({user: 'user'})
 
         }).catch(error => {
             return res.status(HttpStatus.BAD_REQUEST).send(error)
         })
+        return res.status(HttpStatus.BAD_REQUEST).send({})
     }
 
     @Post('register')

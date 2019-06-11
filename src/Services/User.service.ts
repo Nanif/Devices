@@ -38,7 +38,6 @@ export class UserService {
         return new Promise<boolean>(async (resolve, reject) => {
             try {
                 let res = await this.userDao.login(user);
-                console.log(res)
                 if (res) {
                     resolve(res);
                 }

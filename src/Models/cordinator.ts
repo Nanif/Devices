@@ -1,6 +1,6 @@
 export class Cordinator {
-    lat: number;
-    long: number;
+    lat: string;
+    long: string;
     constructor(lat, long){
         this.lat = lat;
         this.long = long;

@@ -52,53 +52,60 @@ export class AreaDao {
         })
     }
 
-    async updateArea(area: AreaModel): Promise<Area> {
+    async updateArea(area: AreaModel): Promise<any> {
+        return new Promise<any>(async (resolve, reject) => {
 
-        // why dont work ?????
 
-        return new Promise<Area>(async (resolve, reject) => {
+            let areaModel: AreaModel = {
+                id: area.id,
+                title: area.title,
+                description: area.description,
+                geoJson: area.geoJson
+            }
             try {
-                this.Areas_REPOSITORY.update({
-                        title: area.title,
-                        description: area.description,
-                        radars: area.radars,
-                        cameras: area.cameras,
-                        geoJson: area.geoJson
-                    },{where: {id: area.id} }
+                this.Areas_REPOSITORY.update({areaModel}, {where: {id: area.id}}
                 ).then(result => {
-                    console.log('resullttttttttttttttttt')
                     if (result) {
-                        resolve()
+                        resolve(result)
                     }
                 }).catch(error => {
-                    console.log('oooooooooooooooooooooooooooooooooooooooooooooooooooo', error)
                     reject(error)
                 })
             } catch (e) {
-                console.log('second catch', e)
                 reject(e)
             }
         })
     }
 
-    async deleteArea(area: AreaModel): Promise<Area> {
-        return new Promise<Area>(async (resolve, reject) => {
-            try {
-                this.Areas_REPOSITORY.destroy({
-                             where: {id: area.id}
-                    }).then(result => {
-                    console.log('resullttttttttttttttttt')
-                    if (result) {
-                        resolve()
+    async deleteArea(area: AreaModel): Promise<Number> {
+        return new Promise<Number>(async (resolve, reject) => {
+                try {
+                    const radar = await this.Radars_REPOSITORY.destroy({where: {areaId: area.id}})
+                    if (radar) {
+                        try {
+                            const camera = await this.Cameras_REPOSITORY.destroy({where: {areaId: area.id}})
+                            if (camera) {
+                                try {
+                                    const areaResult = await this.Areas_REPOSITORY.destroy({
+                                        where: {id: area.id}
+                                    })
+                                    if (areaResult) {
+                                        resolve(areaResult)
+                                    }
+
+                                } catch (e) {
+                                    reject(e)
+                                }
+
+                            }
+                        } catch (e) {
+                            reject(e)
+                        }
                     }
-                }).catch(error => {
-                    console.log('oooooooooooooooooooooooooooooooooooooooooooooooooooo', error)
-                    reject(error)
-                })
-            } catch (e) {
-                console.log('second catch', e)
-                reject(e)
+                } catch (e) {
+                    reject(e)
+                }
             }
-        })
+        )
     }
 }
