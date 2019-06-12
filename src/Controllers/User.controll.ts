@@ -1,16 +1,22 @@
-import {Body, Controller, Get, HttpStatus, Post, Query, Res} from "@nestjs/common";
+import {Body, Controller, Get, HttpStatus, Post, Query, Res, UseGuards} from "@nestjs/common";
 import {UserService} from "../Services/User.service";
 import {registerDto} from "../Dto/register-dto";
 import {Response} from "express";
+import {AuthGuard} from "../shared/Auth.guard";
+import {UserLoginRequestDto} from "../Dto/User-login-request-dto";
+import { User } from  '../DB/Entities/User.entity';
+import {JwtService} from "@nestjs/jwt";
 
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {
+    constructor(private readonly userService: UserService,
+                private readonly jwtService: JwtService) {
     }
 
     @Get('login')
-    login(@Query() request, @Res() res: Response): Response {
+    @UseGuards(new AuthGuard())
+    login(@Query() request: UserLoginRequestDto, @Res() res: Response): Response {
 
         this.userService.login(request).then((result) => {
             return res.status(HttpStatus.OK).send({user: 'user'})
@@ -38,7 +44,11 @@ export class UserController {
 
     // updateUser()
     @Post()
-    getUserByToken(@Body() registerUser: registerDto, @Res() res: Response): any {
+    getUserByToken(@Body()
+                       registerUser: registerDto, @Res()
+                       res: Response
+    ):
+        any {
         //
         // try {
         //     const user = this.userService.register(registerUser).then(() => {

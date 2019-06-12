@@ -20,12 +20,13 @@ export class UserDao {
 
         await this.hashPassword(user.password).then((res) => {
             hashedPassword = res;
-        }).catch(error=> {
+        }).catch(error => {
         })
 
         return new Promise<User>(async (resolve, reject) => {
             try {
-                user.role = Roles.regular;
+                user.role = Roles.Regular;
+
                 let res = await this.Users_REPOSITORY.create(user);
 
                 if (res) {
@@ -43,7 +44,7 @@ export class UserDao {
         return await this.Users_REPOSITORY.findAll<User>();
     }
 
-    async login(user): Promise<boolean> {
+    async getUserByEmailPassword(user): Promise<boolean> {
         const usr = await this.Users_REPOSITORY.findOne({
             attributes: ['password'],
             where: {
@@ -57,6 +58,34 @@ export class UserDao {
             throwError(new Error('this is an important exception'))
         }
     }
+
+
+    async findByEmail(email: string): Promise<User> {
+        return new Promise<User>(async (resolve, reject) => {
+            try {
+                const user = await this.Users_REPOSITORY.findOne({
+                    where: {email: email}
+                })
+
+                if (user) {
+                    return resolve(user)
+                } else {
+                    reject('something went wrong!')
+                }
+            }
+            catch (e) {
+                reject(e)
+            }
+        })
+
+    }
+
+
+    // async login(token: string): Promise<boolean> {
+    //
+    //     // ????????????????
+    //
+    // }
 
     async hashPassword(password: string): Promise<string> {
         return await bcrypt.hash(password, 8);

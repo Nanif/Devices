@@ -37,6 +37,5 @@ export class Area extends Model<Area> {
 
     @HasMany(() => Radar)
     radars: Radar[];
-
 }
 
