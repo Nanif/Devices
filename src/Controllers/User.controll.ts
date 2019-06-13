@@ -1,4 +1,3 @@
-import {Body, Controller, Get, HttpStatus, Post, Query, Res, UseGuards} from "@nestjs/common";
 import {UserService} from "../Services/User.service";
 import {registerDto} from "../Dto/register-dto";
 import {Response} from "express";
@@ -8,28 +7,27 @@ import { User } from  '../DB/Entities/User.entity';
 import {JwtService} from "@nestjs/jwt";
 
 
+import {Body, Controller, Get, HttpStatus, Post, Query, Res, UseGuards} from "@nestjs/common";
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService,
-                private readonly jwtService: JwtService) {
+    constructor(private readonly userService: UserService) {
+
     }
 
     @Get('login')
-    @UseGuards(new AuthGuard())
-    login(@Query() request: UserLoginRequestDto, @Res() res: Response): Response {
-
-        this.userService.login(request).then((result) => {
-            return res.status(HttpStatus.OK).send({user: 'user'})
-
-        }).catch(error => {
-            return res.status(HttpStatus.BAD_REQUEST).send(error)
-        })
-        return res.status(HttpStatus.BAD_REQUEST).send({})
+    // @UseGuards(new AuthGuard())
+   async login(@Query() request: UserLoginRequestDto, @Res() res: Response): Promise<object>{
+       const result = await this.userService.login(request);
+        if (!result) {
+            return res.status(HttpStatus.BAD_REQUEST).send({error:'Something went wrong'})
+        }
+        return res.status(HttpStatus.OK).send({token: result.token})
     }
 
     @Post('register')
     register(@Body() registerUser: registerDto, @Res() res: Response): any {
         this.userService.register(registerUser).then((user) => {
+
             if (!user) {
                 return res.status(HttpStatus.BAD_REQUEST).send({error: 'Could not create user'})
             }

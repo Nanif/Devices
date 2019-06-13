@@ -13,8 +13,7 @@ import {JwtService} from "@nestjs/jwt";
 @Injectable()
 export class UserService {
 
-    constructor(private readonly userDao: UserDao,
-                private readonly jwtService: JwtService) {
+    constructor(private readonly userDao: UserDao, private readonly jwtService: JwtService) {
     }
 
     async register(user: registerDto): Promise<User> {
@@ -39,8 +38,8 @@ export class UserService {
         })
     }
 
-    async getUserByEmailPassword(user: getUserRequestDto): Promise<boolean> {
-        return new Promise<boolean>(async (resolve, reject) => {
+    async getUserByEmailPassword(user: getUserRequestDto): Promise<User> {
+        return new Promise<User>(async (resolve, reject) => {
             try {
                 let userModel: UserModel = {
                     email: user.email,
@@ -73,16 +72,20 @@ export class UserService {
     }
 
     async login(user: UserLoginRequestDto): Promise<TokenDto> {
-        console.log(user+ 'fdfffffffffffff')
         return new Promise<TokenDto>(async (resolve, reject) => {
             try {
-                let res = await this.userDao.findByEmail(user.token);
+                const userModel: UserModel = {
+                    password: user.password,
+                    email: user.email
+                }
+                let res = await this.userDao.getUserByEmailPassword(userModel);
                 if (res) {
                     try {
                         const token = await this.createToken(res);
                         const tokenResponse: TokenDto = {
                             token:token
                         };
+                        console.log(tokenResponse)
                         resolve(tokenResponse);
                     }
                     catch(e) {
@@ -96,7 +99,7 @@ export class UserService {
     }
 
     async createToken(user: User): Promise<string> {
-        const permissionsId = user.permissions.map(permission => permission.id);
-        return await this.jwtService.sign({ permissionsId: permissionsId });
+        const permissionsId = user.permissions? user.permissions.map(permission => permission.id): '';
+        return await this.jwtService.sign({permissionsId: permissionsId, id: user.id});
     }
 }

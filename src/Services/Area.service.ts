@@ -47,6 +47,7 @@ export class AreaService {
     }
 
 
+
     async deleteArea(deleteAreaDto: DeleteAreaRequestDto): Promise<Number> {
         // which object to send to dao weather areaModel or DeleteAreaRequestDto ?
         const areaModel: AreaModel = {

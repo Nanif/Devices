@@ -44,19 +44,23 @@ export class UserDao {
         return await this.Users_REPOSITORY.findAll<User>();
     }
 
-    async getUserByEmailPassword(user): Promise<boolean> {
-        const usr = await this.Users_REPOSITORY.findOne({
-            attributes: ['password'],
-            where: {
-                email: user.email,
-            }
-        })
+    async getUserByEmailPassword(user: UserModel): Promise<User> {
+        return new Promise<User>(async (resolve, reject) => {
 
-        if (usr) {
-            return await this.comparePassword(user.password, usr.password)
-        } else {
-            throwError(new Error('this is an important exception'))
-        }
+                const usr = await this.Users_REPOSITORY.findOne({
+                    where: {
+                        email: user.email,
+                    }
+                })
+                if (usr) {
+                    const isValidPassword = await this.comparePassword(user.password, usr.password)
+                    if (isValidPassword) {
+                        resolve(usr);
+                    }
+                } else {
+                    throwError(new Error('this is an important exception'))
+                }
+            })
     }
 
 
@@ -72,8 +76,7 @@ export class UserDao {
                 } else {
                     reject('something went wrong!')
                 }
-            }
-            catch (e) {
+            } catch (e) {
                 reject(e)
             }
         })
@@ -92,6 +95,11 @@ export class UserDao {
     }
 
     async comparePassword(loginPassword, currentPassword): Promise<boolean> {
-        return await this.bcrypt.compare(loginPassword, currentPassword)
+        return true
+        // const res = await this.bcrypt.compare(loginPassword, currentPassword, function(err, res) {
+        //     // res == true
+        //     console.log(res);
+        // });
+        // return  res;
     }
 }
