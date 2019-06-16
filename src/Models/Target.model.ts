@@ -7,7 +7,7 @@ export class TargetModel {
     description: string;
     title: string;
     status: ActiveStatus;
-    // radarId: number
+    radarId: number
 
     static transformFromEntityToModel(target: Target): TargetModel{
         const areaJson = target.toJSON();
@@ -15,6 +15,7 @@ export class TargetModel {
             description: target.description,
             title: target.title,
             status: target.status,
+            radarId: target.radarId
         };
         return targetModel
     }

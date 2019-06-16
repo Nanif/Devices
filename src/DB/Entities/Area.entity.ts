@@ -15,21 +15,21 @@ export class Area extends Model<Area> {
     @Column
     description: string;
 
-    @Column(DataType.TEXT)
-    get geoJson(): Cordinator[] {
-        if(this.getDataValue('value')) {
-            return JSON.parse(this.getDataValue('value'));
-        }
-        return null;
-    }
-    set geoJson(value: Cordinator[]) {
-        if(value) {
-            this.setDataValue('geoJson', JSON.stringify(value));
-        }
-        else {
-            this.setDataValue('geoJson', value);
-        }
-    }‏
+    // @Column(DataType.TEXT)
+    // get geoJson(): Cordinator[] {
+    //     if(this.getDataValue('value')) {
+    //         return JSON.parse(this.getDataValue('value'));
+    //     }
+    //     return null;
+    // }
+    // set geoJson(value: Cordinator[]) {
+    //     if(value) {
+    //         this.setDataValue('geoJson', JSON.stringify(value));
+    //     }
+    //     else {
+    //         this.setDataValue('geoJson', value);
+    //     }
+    // }‏
     // geoJson: string;
 
     @HasMany(() => Camera)

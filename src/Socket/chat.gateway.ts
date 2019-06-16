@@ -6,9 +6,11 @@ import {
     OnGatewayDisconnect
 } from '@nestjs/websockets';
 
+
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayConnection,
     OnGatewayDisconnect {
+
 
     @WebSocketServer() server;
     users: number = 0;
@@ -37,8 +39,4 @@ export class ChatGateway implements OnGatewayConnection,
         this.server.emit('updateTarget', message);
         // client.broadcast.emit('updateTarget', message);
     }
-
-
-
-
 }
