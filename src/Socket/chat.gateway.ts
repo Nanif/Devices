@@ -25,7 +25,6 @@ export class ChatGateway implements OnGatewayConnection,
     }
 
     async handleDisconnect() {
-
         // A client has disconnected
         this.users--;
 
@@ -33,10 +32,9 @@ export class ChatGateway implements OnGatewayConnection,
         this.server.emit('users', this.users);
 
     }
-
-    @SubscribeMessage('newTarget')
-    async onAddTarget(client, message) {
-        this.server.emit('updateTarget', message);
-        // client.broadcast.emit('updateTarget', message);
-    }
+    // @SubscribeMessage('newTarget')
+    // async onAddTarget(client, message) {
+    //     this.server.emit('updateTarget', message);
+    //     // client.broadcast.emit('updateTarget', message);
+    // }
 }

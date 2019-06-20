@@ -7,12 +7,12 @@ import {TargetService} from "../Services/Target.service";
 
 
 
-@Controller()
+@Controller('target')
 export class TargetController {
     constructor(private readonly targetService: TargetService) {
     }
 
-    @Post()
+    @Post('createTarget')
     async createTarget(@Body() areaDto: CreateTargetRequestDto, @Res() res: Response) {
         try {
             const areaModel: AreaModel = await this.targetService.createTarget(areaDto);
@@ -21,10 +21,10 @@ export class TargetController {
                 description: areaModel.description,
 
             }
-            return res.status(HttpStatus.CREATED).send({area: createAreaResponse})
+            return res.status(HttpStatus.CREATED).send({target: createAreaResponse})
 
         } catch (e) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: 'something wrong'})
+            res.status(HttpStatus.BAD_REQUEST).send({error: 'something wrong', message: e})
         }
     }
 
@@ -37,12 +37,12 @@ export class TargetController {
     deleteTarget() {
     }
 
-    @Get()
-    getAllTargets(@Res() res: Response) {
-        this.targetService.getAllTargets().then((targets) => {
-            return res.status(HttpStatus.OK).send({res: targets})
-        }).catch(error => {
-            return res.status(HttpStatus.BAD_REQUEST).send({error: error})
-        })
-    }
+    // @Get()
+    // getAllTargets(@Res() res: Response) {
+    //     this.targetService.getAllTargets().then((targets) => {
+    //         return res.status(HttpStatus.OK).send({res: targets})
+    //     }).catch(error => {
+    //         return res.status(HttpStatus.BAD_REQUEST).send({error: error})
+    //     })
+    // }
 }

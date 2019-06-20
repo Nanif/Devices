@@ -8,8 +8,11 @@ export class UserModel {
     name?: string;
 
     email: string;
+
     @prop({required: [true, 'password is required']})
     password: string;
+
     role?: Roles;
+
     permissions?: Permission[]
 }

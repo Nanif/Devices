@@ -15,7 +15,6 @@ export  class AreaModel {
 
     static transformFromEntityToModel(area:Area){
         const areaJson = area.dataValues;
-        console.log(area)
         const areaModel:AreaModel = {
             title: areaJson.title,
             description: areaJson.title,

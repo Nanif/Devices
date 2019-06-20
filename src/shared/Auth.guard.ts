@@ -1,6 +1,7 @@
 import {Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus} from '@nestjs/common';
 import {Observable} from 'rxjs';
 import * as jwt from 'jsonwebtoken';
+
 @Injectable()
 export class AuthGuard implements CanActivate {
     canActivate(

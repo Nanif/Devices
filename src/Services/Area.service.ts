@@ -4,14 +4,18 @@ import {CreateAreaRequestDto} from "../Dto/create-area-request.dto";
 import {AreaDao} from "../Dao/Area.dao";
 import {UpdateAreaRequestDto} from "../Dto/update-area-request.dto";
 import {DeleteAreaRequestDto} from "../Dto/Delete-area-request-dto";
+import {RabbitMQClient} from "./RabbitMQ.service";
+import {ClientService} from "./Client.service";
 
 @Injectable()
 export class AreaService {
 
-    constructor(private areaDao: AreaDao) {
+    constructor(private areaDao: AreaDao, private readonly clientService: ClientService) {
     }
 
     async getAllAreas(): Promise<AreaModel[]> {
+
+        this.clientService.calc();
         return new Promise<any>(async (resolve, reject) => {
             const areas = await this.areaDao.getAllAreas();
             if(!areas){

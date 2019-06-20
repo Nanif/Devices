@@ -15,7 +15,7 @@ export class UserController {
     }
 
     @Get('login')
-    // @UseGuards(new AuthGuard())
+    @UseGuards(new AuthGuard())
    async login(@Query() request: UserLoginRequestDto, @Res() res: Response): Promise<object>{
        const result = await this.userService.login(request);
         if (!result) {
@@ -26,6 +26,7 @@ export class UserController {
 
     @Post('register')
     register(@Body() registerUser: registerDto, @Res() res: Response): any {
+        // console.log('lkjhghbjnkml;ploiujhyg', registerUser)
         this.userService.register(registerUser).then((user) => {
 
             if (!user) {

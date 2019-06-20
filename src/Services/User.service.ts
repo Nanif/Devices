@@ -9,6 +9,7 @@ import {UserLoginRequestDto} from "../Dto/User-login-request-dto";
 import {getUserRequestDto} from "../Dto/get-user-request-dto";
 import {TokenDto} from "../Dto/Token-dto";
 import {JwtService} from "@nestjs/jwt";
+import {isLowerCase} from "tslint/lib/utils";
 
 @Injectable()
 export class UserService {
@@ -23,7 +24,6 @@ export class UserService {
                 password: user.password,
                 email: user.email,
                 role: user.role,
-
             }
 
             try {
@@ -56,7 +56,6 @@ export class UserService {
         })
     }
 
-
     async findByEmail(email: string): Promise<User> {
         return new Promise<User>(async (resolve, reject) => {
             try {
@@ -83,12 +82,10 @@ export class UserService {
                     try {
                         const token = await this.createToken(res);
                         const tokenResponse: TokenDto = {
-                            token:token
+                            token: token
                         };
-                        console.log(tokenResponse)
                         resolve(tokenResponse);
-                    }
-                    catch(e) {
+                    } catch (e) {
                         reject
                     }
                 }
@@ -99,7 +96,7 @@ export class UserService {
     }
 
     async createToken(user: User): Promise<string> {
-        const permissionsId = user.permissions? user.permissions.map(permission => permission.id): '';
-        return await this.jwtService.sign({permissionsId: permissionsId, id: user.id});
+        const userPermissionsId = user.permissions.map(item => item.dataValues.id)
+        return await this.jwtService.sign({permissionsId: userPermissionsId, id: user.id});
     }
 }

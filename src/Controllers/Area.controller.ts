@@ -1,4 +1,16 @@
-import {Body, Controller, Delete, Get, HttpStatus, Post, Put, Res, UsePipes, ValidationPipe} from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpStatus,
+    Post,
+    Put,
+    Res,
+    UseGuards,
+    UsePipes,
+    ValidationPipe
+} from "@nestjs/common";
 import {AreaService} from "../Services/Area.service";
 import {AreaModel} from "../Models/Area.model";
 import {Response} from "express";
@@ -7,17 +19,18 @@ import {CreateAreaResponseDto} from "../Dto/create-area-response.dto";
 import {UpdateAreaRequestDto} from "../Dto/update-area-request.dto";
 import {UpdateAreaResponseDto} from "../Dto/update-area-response.dto";
 import {DeleteAreaRequestDto} from "../Dto/Delete-area-request-dto";
+import {PermissionGuard} from "../Middlware/Auth.guard";
 
 @Controller('area')
 export class AreaController {
-    constructor(private readonly  areaService: AreaService) {
+    constructor(private readonly  areaService: AreaService, ) {
     }
 
     @Get('getAllAreas')
     async getAllAreas(@Res() res: Response) {
         this.areaService.getAllAreas().then(areas => {
             if (areas) {
-                return res.status(HttpStatus.OK).send({areas: areas})
+                return res.status(HttpStatus.OK).send({message: 'success'})
             }
             return res.status(HttpStatus.BAD_REQUEST).send({error:"Could not get areas"})
         }).catch(error => {
@@ -26,6 +39,7 @@ export class AreaController {
 
     }
 
+    @UseGuards(PermissionGuard)
     @Post('createArea')
     async createArea(@Body() areaDto: CreateAreaRequestDto, @Res() res: Response) {
         try {

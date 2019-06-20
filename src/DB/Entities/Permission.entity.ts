@@ -9,8 +9,7 @@ export class Permission extends Model<Permission> {
     type: string;
 
     @BelongsToMany(() => User, () => UsersPermissions)
-    users: User[];
+    users?: User[];
 }
 
 // name,password,email,role(superAdmin,admin,regular)
-

@@ -10,6 +10,7 @@ import {PermissionProvider} from './EntityProviders/Permission.provider'
 import {UsersPermissionProvider} from "./EntityProviders/UsersPermissions.provider";
 import {UserDao} from "../Dao/User.dao";
 import {AreaDao} from "../Dao/Area.dao";
+import {TargetDao} from "../Dao/Target.dao";
 
 
 const providers = [

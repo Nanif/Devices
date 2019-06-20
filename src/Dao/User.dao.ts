@@ -5,6 +5,9 @@ import {throwError} from "rxjs";
 import {UserModel} from "../Models/User.model";
 import * as bcrypt from 'bcrypt'
 import {Roles} from "../Models/Enums/Roles";
+import {UsersPermissions} from "../DB/Entities/UsersPermissions.entity";
+import {where} from "sequelize";
+import {Permission} from "../DB/Entities/Permission.entity";
 
 // const bcrypt = require('bcryptjs');
 
@@ -21,16 +24,28 @@ export class UserDao {
         await this.hashPassword(user.password).then((res) => {
             hashedPassword = res;
         }).catch(error => {
+
         })
 
         return new Promise<User>(async (resolve, reject) => {
             try {
-                user.role = Roles.Regular;
 
-                let res = await this.Users_REPOSITORY.create(user);
+                let userEntity = await this.Users_REPOSITORY.create(user);
 
-                if (res) {
-                    resolve(res)
+                let userPermission: UsersPermissions = {
+                    userId: userEntity.id,
+                    permissionId: 1
+                }
+
+                let userPermission2: UsersPermissions = {
+                    userId: userEntity.id,
+                    permissionId: 2
+                }
+                const res1 = await this.UsersPermissions_REPOSITORY.create(userPermission);
+                const res2 = await this.UsersPermissions_REPOSITORY.create(userPermission2);
+                // await areaEntity.addCamera(camera);
+                if (userEntity) {
+                    resolve(userEntity)
                 } else {
                     resolve(null)
                 }
@@ -47,22 +62,22 @@ export class UserDao {
     async getUserByEmailPassword(user: UserModel): Promise<User> {
         return new Promise<User>(async (resolve, reject) => {
 
-                const usr = await this.Users_REPOSITORY.findOne({
-                    where: {
-                        email: user.email,
-                    }
-                })
-                if (usr) {
-                    const isValidPassword = await this.comparePassword(user.password, usr.password)
-                    if (isValidPassword) {
-                        resolve(usr);
-                    }
-                } else {
-                    throwError(new Error('this is an important exception'))
+            const usr = await this.Users_REPOSITORY.findOne({
+                include:[Permission],
+                where: {
+                    email: user.email,
                 }
             })
+            if (usr) {
+                const isValidPassword = await this.comparePassword(user.password, usr.password)
+                if (isValidPassword) {
+                    resolve(usr);
+                }
+            } else {
+                throwError(new Error('this is an important exception'))
+            }
+        })
     }
-
 
     async findByEmail(email: string): Promise<User> {
         return new Promise<User>(async (resolve, reject) => {
@@ -82,13 +97,6 @@ export class UserDao {
         })
 
     }
-
-
-    // async login(token: string): Promise<boolean> {
-    //
-    //     // ????????????????
-    //
-    // }
 
     async hashPassword(password: string): Promise<string> {
         return await bcrypt.hash(password, 8);
